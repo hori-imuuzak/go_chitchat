@@ -4,7 +4,6 @@ import (
 	"chitchat/domains/model"
 	"chitchat/domains/repository"
 	"chitchat/infrastructures/helper"
-	"log"
 
 	"github.com/jinzhu/gorm"
 )
@@ -30,7 +29,6 @@ func (r *userRepositoryGorm) Create(user model.User) bool {
 	db, err := helper.DBOpen()
 	defer helper.DBClose(db)
 	if err != nil {
-		log.Println(err)
 		return false
 	}
 
