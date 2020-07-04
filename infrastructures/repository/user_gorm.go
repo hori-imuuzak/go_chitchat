@@ -1,30 +1,42 @@
 package repository
 
 import (
-	"github.com/jinzhu/gorm"
 	"chitchat/domains/model"
+	"chitchat/domains/repository"
 	"chitchat/infrastructures/helper"
+	"log"
+
+	"github.com/jinzhu/gorm"
 )
 
-type UserRepositoryGorm struct{}
+type userRepositoryGorm struct{}
 
 type UserEntity struct {
 	gorm.Model
-	Uuid string `gorm:"type:varchar(255);unique_index"`,
-	Name string `gorm:"type:varchar(255)"`,
-	Email string `gorm:"type:varchar(255)"`,
+	Uuid  string `gorm:"type:varchar(255);unique_index"`
+	Name  string `gorm:"type:varchar(255)"`
+	Email string `gorm:"type:varchar(255)"`
 }
 
-func (r *UserRepositoryGorm) Create(user model.User) bool {
+func (u *UserEntity) TableName() string {
+	return "users"
+}
+
+func NewUserRepository() repository.UserRepository {
+	return &userRepositoryGorm{}
+}
+
+func (r *userRepositoryGorm) Create(user model.User) bool {
 	db, err := helper.DBOpen()
-	defer helper.DBClose(&db)
+	defer helper.DBClose(db)
 	if err != nil {
+		log.Println(err)
 		return false
 	}
 
 	u := UserEntity{
-		Uuid: user.Uuid,
-		Name: user.Name,
+		Uuid:  user.Uuid,
+		Name:  user.Name,
 		Email: user.Email,
 	}
 
@@ -33,6 +45,6 @@ func (r *UserRepositoryGorm) Create(user model.User) bool {
 	return true
 }
 
-func (r *UserRepositoryGorm) Delete(user model.User) bool {
+func (r *userRepositoryGorm) Delete(user model.User) bool {
 	return false
 }

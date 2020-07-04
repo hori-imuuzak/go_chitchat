@@ -1,3 +1,5 @@
+use master;
+
 drop table if exists users;
 create table users (
   `id` int not null primary key auto_increment,
@@ -5,7 +7,9 @@ create table users (
   `name` varchar(255),
   `email` varchar(255),
   `password` varchar(255),
-  `created_at` datetime not null
+  `created_at` datetime not null,
+  `updated_at` datetime not null,
+  `deleted_at` datetime null
 );
 
 drop table if exists sessions;
@@ -14,7 +18,9 @@ create table sessions (
   `uuid` varchar(255) not null unique,
   `email` varchar(255),
   `user_uuid` varchar(255),
-  `created_at` datetime not null
+  `created_at` datetime not null,
+  `updated_at` datetime not null,
+  `deleted_at` datetime null
 );
 
 drop table if exists threads;
@@ -23,7 +29,9 @@ create table threads (
   `uuid` varchar(255) not null unique,
   `topic` text,
   `user_uuid` varchar(255),
-  `created_at` datetime not null
+  `created_at` datetime not null,
+  `updated_at` datetime not null,
+  `deleted_at` datetime null
 );
 
 drop table if exists posts;
@@ -33,5 +41,7 @@ create table posts (
   `body` text,
   `user_uuid` varchar(255),
   `thread_uuid` varchar(255),
-  `created_at` datetime not null
+  `created_at` datetime not null,
+  `updated_at` datetime not null,
+  `deleted_at` datetime null
 );
