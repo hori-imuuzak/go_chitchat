@@ -25,6 +25,50 @@ func NewUserRepository() repository.UserRepository {
 	return &userRepositoryGorm{}
 }
 
+func (r *userRepositoryGorm) FindByUUID(uuid string) (model.User, bool) {
+	db, err := helper.DBOpen()
+	defer helper.DBClose(db)
+	if err != nil {
+		return model.User{}, false
+	}
+
+	u := UserEntity{}
+	found := false
+	db.Where("uuid = ?", uuid).First(&u)
+
+	if u.Uuid != "" {
+		found = true
+	}
+
+	return model.User{
+		Uuid:  u.Uuid,
+		Name:  u.Name,
+		Email: u.Email,
+	}, found
+}
+
+func (r *userRepositoryGorm) FindByEmail(email string) (model.User, bool) {
+	db, err := helper.DBOpen()
+	defer helper.DBClose(db)
+	if err != nil {
+		return model.User{}, false
+	}
+
+	u := UserEntity{}
+	found := false
+	db.Where("email = ?", email).First(&u)
+
+	if u.Uuid != "" {
+		found = true
+	}
+
+	return model.User{
+		Uuid:  u.Uuid,
+		Name:  u.Name,
+		Email: u.Email,
+	}, found
+}
+
 func (r *userRepositoryGorm) Create(user model.User) bool {
 	db, err := helper.DBOpen()
 	defer helper.DBClose(db)
@@ -44,5 +88,13 @@ func (r *userRepositoryGorm) Create(user model.User) bool {
 }
 
 func (r *userRepositoryGorm) Delete(user model.User) bool {
-	return false
+	db, err := helper.DBOpen()
+	defer helper.DBClose(db)
+	if err != nil {
+		return false
+	}
+
+	db.Where("uuid = ?", user.Uuid).Delete(&UserEntity{})
+
+	return true
 }
